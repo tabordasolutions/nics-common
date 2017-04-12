@@ -35,7 +35,6 @@ import edu.mit.ll.nics.common.constants.SADisplayConstants;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 public class LogRowMapper extends JoinRowMapper<Log> {
 
     public LogRowMapper() {
@@ -48,7 +47,7 @@ public class LogRowMapper extends JoinRowMapper<Log> {
         log.setLogid(rs.getInt("logid"));
         log.setLogtypeid(rs.getInt("logtypeid"));
         log.setMessage(rs.getString("message"));
-        log.setCreated(rs.getDate("created"));
+        log.setCreated(new java.util.Date(rs.getTimestamp("created").getTime()));
          log.setStatus(rs.getInt("status"));
         log.setUsersessionid(rs.getInt("usersessionid"));
         log.setWorkspaceId(rs.getInt("workspaceid"));
