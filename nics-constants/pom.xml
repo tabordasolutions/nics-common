@@ -37,12 +37,12 @@
 
 	<!-- Maven artifact details -->
 	<artifactId>nics-constants</artifactId>
-	<parent>
-		<groupId>edu.mit.ll.nics.common</groupId>
-		<artifactId>master-pom</artifactId>
-		<version>6.2</version>
-		<relativePath>..</relativePath>
-	</parent>
+    <parent>
+        <groupId>com.tabordasolutions.nics.common</groupId>
+        <artifactId>master-pom</artifactId>
+        <version>2017.1</version>
+        <relativePath>..</relativePath>
+    </parent>
 
 
 	<!-- Project information -->
