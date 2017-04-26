@@ -36,9 +36,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- Maven artifact details -->
-	<groupId>edu.mit.ll.nics.common</groupId>
+	<groupId>com.tabordasolutions.nics.common</groupId>
 	<artifactId>master-pom</artifactId>
-	<version>6.2</version>
+	<version>2017.1</version>
 	<packaging>pom</packaging>
 
 	<!-- Project information -->
@@ -173,12 +173,12 @@
 			   <scope>test</scope>          
 		       </dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>xml-email</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>nics-constants</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -229,12 +229,12 @@
 				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>messages</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>entities</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -305,12 +305,12 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>message-parser</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.mit.ll.nics.common</groupId>
+				<groupId>com.tabordasolutions.nics.common</groupId>
 				<artifactId>dao-lib</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -429,14 +429,14 @@
 					<version>${assembly.plugin.version}</version>
 					<dependencies>
 						<dependency>
-							<groupId>edu.mit.ll.nics</groupId>
+							<groupId>edu.mit.ll.nics.assembly</groupId>
 							<artifactId>archive-assembly</artifactId>
-							<version>${project.version}</version>
+							<version>6.2</version>
 						</dependency>
                         <dependency>
-							<groupId>edu.mit.ll.nics</groupId>
+							<groupId>edu.mit.ll.nics.assembly</groupId>
 							<artifactId>spring-deploy-assembly</artifactId>
-							<version>${project.version}</version>
+							<version>6.2</version>
 						</dependency>
 					</dependencies>
 					<executions>
