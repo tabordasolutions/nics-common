@@ -318,6 +318,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
     	fields.append(SADisplayConstants.INCIDENT_ID);
     	fields.append(QueryBuilder.COMMA);
     	fields.append(SADisplayConstants.ORG_ID);
+		fields.append(QueryBuilder.COMMA);
+		fields.append(SADisplayConstants.ORG_NAME);
     	
     	QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.ORG_TABLE)
    			 	 .selectFromTable(fields.toString())
@@ -578,7 +580,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 	
 	public List<Incident> getIncidentsAccessibleByUser(int workspaceId, long accessibleByUserId) {
 		List<Incident> incidents = new ArrayList<Incident>();
-		
+		//TJW - Left unfinished, even in 6.3 update. Not sure where they were going with this.
 		
 		
 		return incidents;
