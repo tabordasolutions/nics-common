@@ -577,14 +577,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 				.addValue(SADisplayConstants.INCIDENT_ID, 0)
 				.addValue(SADisplayConstants.WORKSPACE_ID, workspaceid));
     }
-	
-	public List<Incident> getIncidentsAccessibleByUser(int workspaceId, long accessibleByUserId) {
-		List<Incident> incidents = new ArrayList<Incident>();
-		//TJW - Left unfinished, even in 6.3 update. Not sure where they were going with this.
-		
-		
-		return incidents;
-	}
+
 	
 	public void updateIncidentFolder(List<String> incidentNames, String folder, int workspaceid){
     	QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.INCIDENT_TABLE)
