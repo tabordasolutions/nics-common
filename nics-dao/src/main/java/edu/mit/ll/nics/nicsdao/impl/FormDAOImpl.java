@@ -320,47 +320,22 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 	 * @return new/updated Form
 	 */
 	public Form persistForm(Form form) throws Exception {
-		
+
 		if(form == null) {
 			log.debug("Received null Form entity, not persisting.");
 			return null;
 		}
-		
-		boolean update = false;
-		Form newForm = null;		
-		
-		int formId = form.getFormId();
-		Form oldForm = null;
-		
-		if(formId > 0) {
-			try {
-				oldForm = getForm(form.getFormId());
-			} catch(Exception e) {
-				log.error("Exception retrieving form with id: " + formId + ": " + e.getMessage());
-			}
-		}
-		
-		if(oldForm != null) {
-			update = true;
-		}
 
-		if(update) {
+		Form newForm = null;
+		if(form.getFormId() > 0) {
+            log.debug("updating form with id " + form.getFormId());
 			return this.updateForm(form);
 		} else {
 			// Persist
-			
 			// TODO: refactor so either getNextFormId isn't long, or form isn't using an int for an ID
-			// TODO: make form table default to use the next formid
-			int newFormId = form.getFormId();
-			if(form.getFormId() <= 0) {
-				// Not set, so set it
-				newFormId = (int)getNextFormId();
-				form.setFormId(newFormId);
-			} else {
-				// Assume they set it already, and hope they used the form sequence
-				log.debug("Using provided formid: " + form.getFormId());
-			}
-			
+			int newFormId = (int)getNextFormId();
+			form.setFormId(newFormId);
+
 			List<String> fields = Arrays.asList(				
 				"formId",
 				"formtypeid",
@@ -389,6 +364,10 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 
 	public Form updateForm(Form form) throws Exception {
         Form newForm = null;
+		if(getForm(form.getFormId()) == null) {
+			log.error("Unable to retrieve form with id: " + form.getFormId());
+            throw new Exception("Report Update failed, No form/report found with id : " + form.getFormId());
+		}
 
         QueryModel query = buildQuery(form);
 
