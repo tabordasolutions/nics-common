@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2018, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -99,9 +100,10 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
     	return form;
     }
     
-    /** getFolder
-	 *  @param folderid - String - id of folder
-	 *  @return Folder 
+    /** getForm
+	 *  @param incidentid - int - id of incident
+     *  @param usersessionid - int
+	 *  @return Form
 	 */
     public Form getForm(int incidentid, int usersessionid){
     	
@@ -114,9 +116,9 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 		JoinRowCallbackHandler<Form> handler = getHandlerWith();
 		
 		template.query(
-        		query.toString(), 
+        		query.toString(),
         		new MapSqlParameterSource(SADisplayConstants.INCIDENT_ID, incidentid)
-        		.addValue(SADisplayConstants.USERSESSION_ID, usersessionid), 
+        		.addValue(SADisplayConstants.USERSESSION_ID, usersessionid),
         		handler);
 		
 		try{
@@ -227,9 +229,6 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 		return formId;
 	}
 	
-	
-	
-	
 	public List<Form> readForms(Set<Integer> formTypeIds,
 			Map<String, Object> queryOpts) throws Exception {
 				
@@ -321,73 +320,22 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 	 * @return new/updated Form
 	 */
 	public Form persistForm(Form form) throws Exception {
-		
+
 		if(form == null) {
 			log.debug("Received null Form entity, not persisting.");
 			return null;
 		}
-		
-		boolean update = false;
-		Form newForm = null;		
-		
-		int formId = form.getFormId();
-		Form oldForm = null;
-		
-		if(formId > 0) {
-			try {
-				oldForm = getForm(form.getFormId());
-			} catch(Exception e) {
-				log.error("Exception retrieving form with id: " + formId + ": " + e.getMessage());
-			}
-		}
-		
-		if(oldForm != null) {
-			update = true;
-		}
-		
-		if(update) {
-			
-			QueryModel query = QueryManager.createQuery(SADisplayConstants.FORM_TABLE).update()
-					.equals(SADisplayConstants.MESSAGE).comma()
-					.equals(SADisplayConstants.DISTRIBUTED).comma()				
-					.equals("incidentname").comma()
-					.equals(SADisplayConstants.SEQ_TIME)
-					.where().equals("formId");
-			
-			BeanPropertySqlParameterSource map = new BeanPropertySqlParameterSource(form);
-			
-			int ret = -1;
-			
-			try {
-				ret = this.template.update(query.toString(), map);
-			} catch (Exception e) {
-				throw new Exception("Error updating form with id: " + 
-						oldForm.getFormId() + ": " + e.getMessage());
-			}
-			
-			log.debug("Update performed on formid("+ formId + ") resulted in " + 
-					((ret == 0) ? "no" : ret) + " affected row.");	
-			
-			if(ret == 1) {
-				newForm = getForm(formId);
-			}
-			
-			return newForm;
+
+		Form newForm = null;
+		if(form.getFormId() > 0) {
+            log.debug("updating form with id " + form.getFormId());
+			return this.updateForm(form);
 		} else {
 			// Persist
-			
 			// TODO: refactor so either getNextFormId isn't long, or form isn't using an int for an ID
-			// TODO: make form table default to use the next formid
-			int newFormId = form.getFormId();
-			if(form.getFormId() <= 0) {
-				// Not set, so set it
-				newFormId = (int)getNextFormId();
-				form.setFormId(newFormId);
-			} else {
-				// Assume they set it already, and hope they used the form sequence
-				log.debug("Using provided formid: " + form.getFormId());
-			}
-			
+			int newFormId = (int)getNextFormId();
+			form.setFormId(newFormId);
+
 			List<String> fields = Arrays.asList(				
 				"formId",
 				"formtypeid",
@@ -413,9 +361,53 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 			return newForm;
 		}
 	}
-	
-	
-	private void processQueryConstraintOptions(StringBuilder sql,
+
+	public Form updateForm(Form form) throws Exception {
+        Form newForm = null;
+		if(getForm(form.getFormId()) == null) {
+			log.error("Unable to retrieve form with id: " + form.getFormId());
+            throw new Exception("Report Update failed, No form/report found with id : " + form.getFormId());
+		}
+
+        QueryModel query = buildQuery(form);
+
+        BeanPropertySqlParameterSource map = new BeanPropertySqlParameterSource(form);
+
+        int ret = -1;
+        try {
+            ret = this.template.update(query.toString(), map);
+        } catch (Exception e) {
+            throw new Exception("Error updating form with id: " +
+                    form.getFormId(), e);
+        }
+
+        if(ret == 1) {
+            newForm = getForm(form.getFormId());
+        } else {
+            log.error("Update failed on form with id: " + form.getFormId());
+            throw new Exception("Unable to update form with id: " + form.getFormId());
+        }
+        return newForm;
+    }
+
+    private QueryModel buildQuery(Form form) {
+        QueryModel query = QueryManager.createQuery(SADisplayConstants.FORM_TABLE).update();
+        boolean addComma = false;
+        if(StringUtils.isNotBlank(form.getMessage())) {
+            query.equals(SADisplayConstants.MESSAGE);
+            addComma = true;
+        }
+        if(form.getDistributed() != null) {
+            if(addComma)
+                query.comma();
+            query.equals(SADisplayConstants.DISTRIBUTED);
+        }
+        query.where().equals("formId");
+
+        return query;
+    }
+
+    private void processQueryConstraintOptions(StringBuilder sql,
 			Map<String, Object> queryOpts) throws Exception {
 		
 		
