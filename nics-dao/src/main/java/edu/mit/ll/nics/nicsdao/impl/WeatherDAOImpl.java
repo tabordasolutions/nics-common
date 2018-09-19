@@ -1,7 +1,6 @@
 package edu.mit.ll.nics.nicsdao.impl;
 
 import edu.mit.ll.nics.common.entity.Weather;
-import edu.mit.ll.nics.nicsdao.PostGISDataSource;
 import edu.mit.ll.nics.nicsdao.WeatherDAO;
 import edu.mit.ll.nics.nicsdao.mappers.WeatherRowMapper;
 import org.slf4j.Logger;
