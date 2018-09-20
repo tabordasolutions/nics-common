@@ -1,5 +1,6 @@
 package edu.mit.ll.nics.nicsdao.impl;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import edu.mit.ll.nics.common.entity.Weather;
 import edu.mit.ll.nics.nicsdao.WeatherDAO;
 import edu.mit.ll.nics.nicsdao.mappers.WeatherRowMapper;
@@ -25,7 +26,7 @@ public class WeatherDAOImpl implements WeatherDAO {
     }
 
     @Override
-    public Weather getWeatherDataFromLocation(double[] location, double searchRangeInKiloMeters) throws DataAccessException {
+    public Weather getWeatherDataFromLocation(Coordinate location, double searchRangeInKiloMeters) throws DataAccessException {
         Weather weather = null;
         if(searchRangeInKiloMeters <= 0) {
             log.warn("No Weather data can be found in given search range %.10f", searchRangeInKiloMeters);
@@ -41,8 +42,8 @@ public class WeatherDAOImpl implements WeatherDAO {
         return weather;
     }
 
-    private String getWeatherDataSQL(double[] location, double searchRangeInKiloMeters) {
-       String givenLocationGeography = String.format("st_geogfromtext('SRID=4326;POINT(%.20f %.20f)')", location[0], location[1]);
+    private String getWeatherDataSQL(Coordinate location, double searchRangeInKiloMeters) {
+       String givenLocationGeography = String.format("st_geogfromtext('SRID=4326;POINT(%.20f %.20f)')", location.x, location.y);
        String distanceFunctionSQL = String.format("st_distance(location::geography, %s)/1000", givenLocationGeography);
        double searchRangeInMeters = searchRangeInKiloMeters * 1000;
        String selectClause = "SELECT objectid as objectId, st_astext(location) as location, " +

@@ -2,6 +2,7 @@ package edu.mit.ll.nics.nicsdao;
 
 import java.util.Collections;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -26,20 +27,20 @@ public class WeatherDAOImplTest {
     @Test
     public void returnsWeatherInfoSuccessfully() {
         Mockito.when(mockJdbcTemplate.queryForObject(anyString(), eq(Collections.EMPTY_MAP), any(WeatherRowMapper.class))).thenReturn(weather);
-        Weather result = weatherDAO.getWeatherDataFromLocation(new double[] {-121.098, 35.0998}, 10);
+        Weather result = weatherDAO.getWeatherDataFromLocation(new Coordinate(-121.098, 35.0998), 10);
         assertEquals(result, weather);
     }
 
     @Test
     public void returnsNullIfNoResultsFound() {
         Mockito.when(mockJdbcTemplate.queryForObject(anyString(), eq(Collections.EMPTY_MAP), any(WeatherRowMapper.class))).thenThrow(new EmptyResultDataAccessException(1));
-        assertNull(weatherDAO.getWeatherDataFromLocation(new double[] {-121.098, 35.0998}, 10));
+        assertNull(weatherDAO.getWeatherDataFromLocation(new Coordinate(-121.098, 35.0998), 10));
     }
 
     @Test(expected = Exception.class)
     public void throwsExceptionIfFailsToFetchWeatherData() {
         Mockito.when(mockJdbcTemplate.queryForObject(anyString(), eq(Collections.EMPTY_MAP), any(WeatherRowMapper.class))).thenThrow(new Exception("Test Exception"));
-        weatherDAO.getWeatherDataFromLocation(new double[] {-121.098, 35.0998}, 10);
+        weatherDAO.getWeatherDataFromLocation(new Coordinate(-121.098, 35.0998), 10);
     }
 
 }
