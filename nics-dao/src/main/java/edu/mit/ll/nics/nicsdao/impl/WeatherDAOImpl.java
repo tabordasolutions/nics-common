@@ -52,7 +52,7 @@ public class WeatherDAOImpl implements WeatherDAO {
                 "qc_status as qcStatus, " + distanceFunctionSQL + " as distance ";
        String whereClause = String.format(" WHERE qc_status in ('OK', 'WARNING') and st_dwithin(location::geography, %s, %.6f) ", givenLocationGeography, searchRangeInMeters);
        String orderByClause = "ORDER BY " + distanceFunctionSQL;
-       String limitClause = "LIMIT 1";
+       String limitClause = " LIMIT 1";
        return String.format(selectClause +
                  " FROM " + WEATHER_DB_VIEW +
                  whereClause +
