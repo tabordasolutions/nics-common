@@ -29,10 +29,14 @@
  */
 package edu.mit.ll.nics.common.geoserver.api;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.deploy.util.StringUtils;
+import com.vividsolutions.jts.geom.Coordinate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -534,5 +538,12 @@ public class GeoServer extends SuperGeoServer {
                 + "</format><type>truncate</type><threadCount>"
                 + threadCount + "</threadCount></seedRequest>";
         return restPost("/gwc/rest/seed/" + featureTypeName, resetXML, "text/xml");
+    }
+
+    public String getFeatureDetails(String featureTypeName, Coordinate coordinate, String CRS,  List<String> returnProperties, String geometryColumn) {
+        String requestUrl = "/wfs?service=WFS&request=GetFeature&version=1.0.0&typeName=" + featureTypeName +
+                "&outputFormat=JSON&CQL_FILTER=contains%28" + geometryColumn + ",%20POINT%20%28" + coordinate.x + "%20" + coordinate.y + "%29%29&&srsname=%s&" +
+                "propertyName=" + StringUtils.join(returnProperties, ",");
+        return restGet(requestUrl, "application/json");
     }
 }
