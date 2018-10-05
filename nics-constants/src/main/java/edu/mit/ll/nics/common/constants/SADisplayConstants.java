@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2018, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -347,4 +347,7 @@ public final class SADisplayConstants {
 	public static final String INCIDENT_CREATED = "incident.created";
 	public static final Object TRACKING = "Tracking";
 	public static final Object DATALAYER_DISPLAYNAME = "datalayer.displayname";
+
+	public static final String CRS_4326 = "EPSG:4326";
+    public static final Double KM_PER_MILE = 1.60934;
 }
