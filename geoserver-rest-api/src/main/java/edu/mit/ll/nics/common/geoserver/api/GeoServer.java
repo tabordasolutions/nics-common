@@ -540,12 +540,12 @@ public class GeoServer extends SuperGeoServer {
         return restPost("/gwc/rest/seed/" + featureTypeName, resetXML, "text/xml");
     }
 
-    public String getFeatureDetails(String featureTypeName, Coordinate coordinate, String CRS,  List<String> returnProperties, String geometryColumn) throws Exception {
+    public String getFeatureDetails(String featureTypeName, Coordinate coordinate, String CRS,  List<String> propertiesToReturn, String geometryColumn) throws Exception {
         String requestUrl = "/wfs?service=WFS&request=GetFeature&version=1.0.0&typeName=" + featureTypeName +
                 "&outputFormat=JSON&CQL_FILTER=contains%28" + geometryColumn + ",%20POINT%20%28" + coordinate.x + "%20" + coordinate.y + "%29%29&&srsname=%s&";
-        String returnPropertiesString = joinStringsByDelimiter(returnProperties);
-        if(returnPropertiesString != null)
-                requestUrl = requestUrl + "propertyName=" + this.joinStringsByDelimiter(returnProperties);
+        String propertiesToReturnString = joinStringsByDelimiter(propertiesToReturn);
+        if(propertiesToReturnString != null)
+                requestUrl = requestUrl + "propertyName=" + propertiesToReturnString;
         String response = restGet(requestUrl, "application/json");
         if(response.contains("<ServiceExceptionReport")) {
             log.log(Level.SEVERE, "Unable to fetch feature details from feature type " + featureTypeName + ", Error details: " + response);
@@ -554,7 +554,7 @@ public class GeoServer extends SuperGeoServer {
         return response;
     }
 
-    public String joinStringsByDelimiter(List<String> list) {
+    private String joinStringsByDelimiter(List<String> list) {
         if(list == null || list.isEmpty()) {
             return null;
         }
