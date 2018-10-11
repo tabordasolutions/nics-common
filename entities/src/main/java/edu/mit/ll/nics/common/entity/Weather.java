@@ -11,8 +11,8 @@ public class Weather {
     private Float humidity;
     private String qcStatus;
     private Double distance;
-    private static final String[] COMPASS_DIRECTIONS = {"N","NNE", "NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW","N"};
-    private static final double DEGREES_PER_COMPASS_DIRECTION = 22.5;
+    private static final String[] COMPASS_DIRECTIONS = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest", "North"};
+    private static final double DEGREES_PER_COMPASS_DIRECTION = 45;
     private static final int TOTAL_DEGREES = 360;
 
     public Weather(String objectId, String location, Double airTemperature,
