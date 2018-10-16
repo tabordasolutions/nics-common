@@ -110,6 +110,7 @@ public final class SADisplayConstants {
 	public static final String PARENT_INCIDENT_ID = "parentincidentid";
 	public static final String ACTIVE = "active";
 	public static final String FOLDER = "folder"; // LDDRS-648
+    public static final String INCIDENT_LAST_UDPATE = "lastupdate";
 	
 	//USER COLUMNS
 	public static final String USER_ID = "userId";
