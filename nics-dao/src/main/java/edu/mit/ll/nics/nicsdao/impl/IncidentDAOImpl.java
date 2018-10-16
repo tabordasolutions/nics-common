@@ -29,14 +29,7 @@
  */
 package edu.mit.ll.nics.nicsdao.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,8 +214,9 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 
 			QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.INCIDENT_TABLE)
 					.update().equals(SADisplayConstants.INCIDENT_NAME).comma().equals(SADisplayConstants.DESCRIPTION)
-	    			.comma().equals(SADisplayConstants.PARENT_INCIDENT_ID).comma().equals(SADisplayConstants.LATITUDE)
-	    			.comma().equals(SADisplayConstants.LONGITUDE).where().equals(SADisplayConstants.INCIDENT_ID).returnValue("*");
+					.comma().equals(SADisplayConstants.PARENT_INCIDENT_ID).comma().equals(SADisplayConstants.LATITUDE)
+					.comma().equals(SADisplayConstants.LONGITUDE).comma().equals(SADisplayConstants.INCIDENT_LAST_UDPATE)
+					.where().equals(SADisplayConstants.INCIDENT_ID).returnValue("*");
 
 			MapSqlParameterSource map = new MapSqlParameterSource(SADisplayConstants.INCIDENT_ID,incident.getIncidentid());
 			map.addValue(SADisplayConstants.INCIDENT_NAME, incident.getIncidentname());
@@ -230,6 +224,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 			map.addValue(SADisplayConstants.PARENT_INCIDENT_ID, incident.getParentincidentid());
 			map.addValue(SADisplayConstants.LATITUDE, incident.getLat());
 			map.addValue(SADisplayConstants.LONGITUDE, incident.getLon());
+			map.addValue(SADisplayConstants.INCIDENT_LAST_UDPATE, new Date());
 			
 			
 			JoinRowCallbackHandler<Incident> handler = getIncidentHandlerWith();
