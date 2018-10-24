@@ -349,6 +349,10 @@ public final class SADisplayConstants {
 	public static final Object TRACKING = "Tracking";
 	public static final Object DATALAYER_DISPLAYNAME = "datalayer.displayname";
 
+    //DPA & SRA Columns
+    public static final String DirectProtectionArea_ID = "objectid";
+    public static final String ServiceResponsibilityArea_ID = "objectid";
+
 	public static final String CRS_4326 = "EPSG:4326";
     public static final Double KM_PER_MILE = 1.60934;
 }
