@@ -23,10 +23,8 @@ public class JurisdictionDAOImpl implements JurisdictionDAO {
     }
 
     public Jurisdiction getJurisdiction(Coordinate coordinatesIn4326) {
-        Date startTime = new Date();
         String sra = getResponsibilityArea(coordinatesIn4326);
         DirectProtectionArea directProtectionArea = getDirectProtectionArea(coordinatesIn4326);
-        log.info("Time took to get jurisdiction data : " + (new Date().getTime() - startTime.getTime()));
         return (sra == null && directProtectionArea == null) ? null : new Jurisdiction(sra, directProtectionArea);
     }
 
