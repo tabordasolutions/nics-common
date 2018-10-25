@@ -57,6 +57,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
 
@@ -333,7 +334,9 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
 	public List<String> getIncidentTypeNames() {
 		List<String> incidentTypes = new ArrayList<String>();
 		for(IncidentIncidentType incidentIncidentType : this.getIncidentIncidenttypes()) {
-			incidentTypes.add(incidentIncidentType.getIncidentType().getIncidentTypeName());
+            if(incidentIncidentType.getIncidentType() != null) {
+                incidentTypes.add(incidentIncidentType.getIncidentType().getIncidentTypeName());
+            }
 		}
 		return incidentTypes;
 	}
