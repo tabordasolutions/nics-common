@@ -330,10 +330,10 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
 	}
 
 	@Transient
-	public List<IncidentType> getIncidentTypeNames() {
-		List<IncidentType> incidentTypes = new ArrayList<IncidentType>();
+	public List<String> getIncidentTypeNames() {
+		List<String> incidentTypes = new ArrayList<String>();
 		for(IncidentIncidentType incidentIncidentType : this.getIncidentIncidenttypes()) {
-			incidentTypes.add(incidentIncidentType.getIncidentType());
+			incidentTypes.add(incidentIncidentType.getIncidentType().getIncidentTypeName());
 		}
 		return incidentTypes;
 	}
