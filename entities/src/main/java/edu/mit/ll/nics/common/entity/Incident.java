@@ -62,12 +62,6 @@ import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Polygon;
 
-
-
-
-
-
-//import edu.mit.ll.nics.common.entity.datalayer.DatalayerIncident;
 import edu.mit.ll.nics.common.entity.datalayer.DocumentIncident;
 
 import org.json.JSONArray;
@@ -334,7 +328,15 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
 	public void setLeaf(Boolean leaf) {
 		this.leaf = leaf;
 	}
-    
+
+	@Transient
+	public List<IncidentType> getIncidentTypeNames() {
+		List<IncidentType> incidentTypes = new ArrayList<IncidentType>();
+		for(IncidentIncidentType incidentIncidentType : this.getIncidentIncidenttypes()) {
+			incidentTypes.add(incidentIncidentType.getIncidentType());
+		}
+		return incidentTypes;
+	}
 
     @Override
     public JSONObject toJSONObject() {
