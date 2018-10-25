@@ -32,6 +32,8 @@ package edu.mit.ll.nics.nicsdao.mappers;
 import edu.mit.ll.jdbc.JoinRowMapper;
 import edu.mit.ll.nics.common.entity.IncidentIncidentType;
 import edu.mit.ll.nics.common.constants.SADisplayConstants;
+import edu.mit.ll.nics.common.entity.IncidentType;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,6 +50,11 @@ public class Incident_IncidentTypeRowMapper extends JoinRowMapper<IncidentIncide
         incidentType.setIncidentIncidenttypeid(rs.getInt(SADisplayConstants.INCIDENT_INCIDENTTYPE_ID));
         incidentType.setIncidenttypeid(rs.getInt(SADisplayConstants.INCIDENT_TYPE_ID));
         incidentType.setIncidentid(rs.getInt(SADisplayConstants.INCIDENT_ID));
+        if(StringUtils.isNotBlank(rs.getString(SADisplayConstants.INCIDENT_TYPE_NAME))) {
+            IncidentType iType = new IncidentType(
+                    rs.getInt(SADisplayConstants.INCIDENT_TYPE_ID), rs.getString(SADisplayConstants.INCIDENT_TYPE_NAME));
+            incidentType.setIncidentType(iType);
+        }
         return incidentType;
     }
     
