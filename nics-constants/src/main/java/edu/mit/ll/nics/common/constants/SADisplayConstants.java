@@ -341,18 +341,19 @@ public final class SADisplayConstants {
 	public static final String USER_TABLE = "\"user\"";
 	public static final String COUNTY = "county";
 	public static final String LEGEND = "legend";
-    public static final String UXOREPORT_LOCATION = "location";
-    public static final String UXOREPORTID = "uxoreportid";
+	public static final String UXOREPORT_LOCATION = "location";
+	public static final String UXOREPORTID = "uxoreportid";
 	public static final String INCIDENT_MAP = "Incident Map";
 	public static final String PASSWORD = "password";
 	public static final String INCIDENT_CREATED = "incident.created";
 	public static final Object TRACKING = "Tracking";
 	public static final Object DATALAYER_DISPLAYNAME = "datalayer.displayname";
 
-    //DPA & SRA Columns
-    public static final String DirectProtectionArea_ID = "objectid";
-    public static final String ServiceResponsibilityArea_ID = "objectid";
+	//DPA & SRA Columns
+	public static final String DirectProtectionArea_ID = "objectid";
+	public static final String ServiceResponsibilityArea_ID = "objectid";
 
 	public static final String CRS_4326 = "EPSG:4326";
-    public static final Double KM_PER_MILE = 1.60934;
+	public static final Double KM_PER_MILE = 1.60934;
+	public static final int DEFAULT_WORKSPACE_ID = 1;
 }
