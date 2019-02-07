@@ -54,7 +54,7 @@ public class DirectProtectionArea {
 
     public String getDpa() {
         String dpaGroupCamelCase = StringUtils.capitalize(StringUtils.lowerCase(dpaGroup));
-        return  dpaGroupCamelCase == null ? null : dpaGroupCamelCase + " DPA";
+        return  dpaGroupCamelCase == null ? null : dpaGroupCamelCase;
     }
 
     public int getObjectId() { return this.objectId; }
