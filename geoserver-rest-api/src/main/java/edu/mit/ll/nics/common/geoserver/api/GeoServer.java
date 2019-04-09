@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2018, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,14 @@
  */
 package edu.mit.ll.nics.common.geoserver.api;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import org.apache.commons.codec.binary.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -534,5 +538,30 @@ public class GeoServer extends SuperGeoServer {
                 + "</format><type>truncate</type><threadCount>"
                 + threadCount + "</threadCount></seedRequest>";
         return restPost("/gwc/rest/seed/" + featureTypeName, resetXML, "text/xml");
+    }
+
+    public String getFeatureDetails(String featureTypeName, Coordinate coordinate, String CRS,  List<String> propertiesToReturn, String geometryColumn) throws Exception {
+        String requestUrl = "/wfs?service=WFS&request=GetFeature&version=1.0.0&typeName=" + featureTypeName +
+                "&outputFormat=JSON&CQL_FILTER=contains%28" + geometryColumn + ",%20POINT%20%28" + coordinate.x + "%20" + coordinate.y + "%29%29&&srsname=%s&";
+        String propertiesToReturnString = joinStringsByDelimiter(propertiesToReturn);
+        if(propertiesToReturnString != null)
+                requestUrl = requestUrl + "propertyName=" + propertiesToReturnString;
+        String response = restGet(requestUrl, "application/json");
+        if(response.contains("<ServiceExceptionReport")) {
+            log.log(Level.SEVERE, "Unable to fetch feature details from feature type " + featureTypeName + ", Error details: " + response);
+            throw new Exception("Unable to fetch feature details from feature type " + featureTypeName + ", ErrorMessage: " + response);
+        }
+        return response;
+    }
+
+    private String joinStringsByDelimiter(List<String> list) {
+        if(list == null || list.isEmpty()) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String s : list) {
+            builder.append(s).append(",");
+        }
+        return builder.substring(0, builder.length()-1);
     }
 }

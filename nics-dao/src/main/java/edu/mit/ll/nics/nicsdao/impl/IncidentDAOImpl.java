@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2018, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -644,8 +644,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
     			.left().join(SADisplayConstants.INCIDENT_TYPE_TABLE).using(SADisplayConstants.INCIDENT_TYPE_ID)
 				.where().equals(SADisplayConstants.INCIDENT_ID);
 		
-		JoinRowCallbackHandler<Incident> handler = getIncidentHandlerWith();
-	    
+		JoinRowCallbackHandler<Incident> handler = getIncidentHandlerWith(new Incident_IncidentTypeRowMapper());
+
 		this.template.query(queryModel.toString(), new MapSqlParameterSource(SADisplayConstants.INCIDENT_ID, incidentid), handler);
 		
 		try{
@@ -801,8 +801,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
    	 *  @param mappers - optional additional mappers
    	 *  @return JoinRowCallbackHandler<Incident>
    	 */
-       @SuppressWarnings({ "rawtypes", "unchecked" })
-       private JoinRowCallbackHandler<IncidentType> getIncidentTypeHandlerWith(JoinRowMapper... mappers) {
-           return new JoinRowCallbackHandler(new IncidentTypeRowMapper(), mappers);
-       }
+     @SuppressWarnings({ "rawtypes", "unchecked" })
+     private JoinRowCallbackHandler<IncidentType> getIncidentTypeHandlerWith(JoinRowMapper... mappers) {
+         return new JoinRowCallbackHandler(new IncidentTypeRowMapper(), mappers);
+     }
 }

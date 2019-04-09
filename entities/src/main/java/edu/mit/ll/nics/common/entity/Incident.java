@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2018, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,17 +57,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
 
 import com.vividsolutions.jts.geom.Polygon;
 
-
-
-
-
-
-//import edu.mit.ll.nics.common.entity.datalayer.DatalayerIncident;
 import edu.mit.ll.nics.common.entity.datalayer.DocumentIncident;
 
 import org.json.JSONArray;
@@ -334,7 +329,17 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
 	public void setLeaf(Boolean leaf) {
 		this.leaf = leaf;
 	}
-    
+
+	@Transient
+	public List<IncidentType> getIncidentTypes() {
+		List<IncidentType> incidentTypes = new ArrayList<IncidentType>();
+		for(IncidentIncidentType incidentIncidentType : this.getIncidentIncidenttypes()) {
+            if(incidentIncidentType.getIncidentType() != null) {
+                incidentTypes.add(incidentIncidentType.getIncidentType());
+            }
+		}
+		return incidentTypes;
+	}
 
     @Override
     public JSONObject toJSONObject() {
