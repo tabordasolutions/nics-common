@@ -41,6 +41,7 @@ public class Weather {
     private String qcStatus;
     private Double distance;
     private static final String[] COMPASS_DIRECTIONS = {"North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest", "North"};
+    private static final String[] COMPASS_DIRECTIONS_ABBREVIATION = {"N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW","N"};
     private static final double DEGREES_PER_COMPASS_DIRECTION = 45;
     private static final int TOTAL_DEGREES = 360;
 
@@ -84,6 +85,15 @@ public class Weather {
         double normalizedDirectionInDegrees = this.getWindDirection() % TOTAL_DEGREES;
         long compassDirectionIndex = Math.round(normalizedDirectionInDegrees/DEGREES_PER_COMPASS_DIRECTION);
         return COMPASS_DIRECTIONS[(int) compassDirectionIndex];
+    }
+
+    public String getDescriptiveWindDirectionAbbreviation() {
+        if(this.getWindDirection() == null) {
+            return "Not Available";
+        }
+        double normalizedDirectionInDegrees = this.getWindDirection() % TOTAL_DEGREES;
+        long compassDirectionIndex = Math.round(normalizedDirectionInDegrees/(DEGREES_PER_COMPASS_DIRECTION / 2));
+        return COMPASS_DIRECTIONS_ABBREVIATION[(int) compassDirectionIndex];
     }
 
     public Float getHumidity() {
