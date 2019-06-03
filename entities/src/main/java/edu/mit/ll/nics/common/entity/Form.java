@@ -63,6 +63,7 @@ public class Form extends SADisplayMessageEntity implements SADisplayPersistedEn
 	private Incident incident;
 	private int incidentid;
 	private String incidentname;
+	private String incidentnumber;
 	private FormType formtype;
 	private int formtypeid;
 	private Usersession usersession;
@@ -136,6 +137,14 @@ public class Form extends SADisplayMessageEntity implements SADisplayPersistedEn
 	
 	public void setIncidentname(String incidentname){
 		this.incidentname = incidentname;
+	}
+
+	public String getIncidentnumber(){
+		return this.incidentnumber;
+	}
+
+	public void setIncidentnumber(String incidentnumber){
+		this.incidentnumber = incidentnumber;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -219,6 +228,7 @@ public class Form extends SADisplayMessageEntity implements SADisplayPersistedEn
 			object.put("usersessionid", this.usersessionid);
 			object.put("incidentid", this.incidentid);
 			object.put("incidentname", this.incidentname);
+			object.put("incidentnumber", this.incidentnumber);
 			object.put("formtypeid", this.formtypeid);
 			object.put("seqtime", this.seqtime);
 			object.put("seqnum", this.seqnum);

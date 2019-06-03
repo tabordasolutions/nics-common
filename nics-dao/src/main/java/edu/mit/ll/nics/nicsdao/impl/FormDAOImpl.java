@@ -344,7 +344,7 @@ public class FormDAOImpl extends GenericDAO implements FormDAO {
 				SADisplayConstants.SEQ_TIME,
 				SADisplayConstants.SEQ_NUM,
 				SADisplayConstants.MESSAGE,
-				SADisplayConstants.DISTRIBUTED,				
+				SADisplayConstants.DISTRIBUTED,
 				"incidentname");
 			
 			BeanPropertySqlParameterSource map = new BeanPropertySqlParameterSource(form);

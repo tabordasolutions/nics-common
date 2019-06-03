@@ -51,6 +51,7 @@ public class IncidentRowMapper extends JoinRowMapper<Incident> {
         incident.setFolder(rs.getString(SADisplayConstants.FOLDER));
         incident.setIncidentid(rs.getInt(SADisplayConstants.INCIDENT_ID));
         incident.setIncidentname(rs.getString(SADisplayConstants.INCIDENT_NAME));
+        incident.setIncidentnumber(rs.getString(SADisplayConstants.INCIDENT_NUMBER));
         incident.setLastUpdate(rs.getTimestamp(SADisplayConstants.LAST_UPDATE));
         incident.setLat(rs.getDouble(SADisplayConstants.LATITUDE));
         incident.setLon(rs.getDouble(SADisplayConstants.LONGITUDE));

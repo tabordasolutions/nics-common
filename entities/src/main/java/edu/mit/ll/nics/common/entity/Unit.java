@@ -170,16 +170,19 @@ public class Unit extends SADisplayMessageEntity implements SADisplayPersistedEn
 		try {
 			String collabRoomName = "";
 			String incidentName = "";
+			String incidentNumber = "";
 			if (this.getCollabroom() != null) {
 				collabRoomName = this.getCollabroom().getName();
 			}
 			if (this.getIncident() != null) {
 				incidentName = this.getIncident().getIncidentname();
+				incidentNumber = this.getIncident().getIncidentnumber();
 			}
 			JSONObject object = new JSONObject();
 			object.put("id", this.id);
 			object.put("incidentId", this.incidentid);
-			object.put("incidentName", incidentName);			
+			object.put("incidentName", incidentName);
+			object.put("incidentNumber", incidentNumber);
 			object.put("collabroomId", this.collabroomid);
 			object.put("collabroomName", collabRoomName);
 			object.put("unitName", this.unitname);

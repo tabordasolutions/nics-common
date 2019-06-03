@@ -85,6 +85,7 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
     private Usersession usersession;
     private Integer usersessionid;
     private String incidentname;
+    private String incidentnumber;
     private double lat;
     private double lon;
     private Date created;
@@ -105,10 +106,11 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
     public Incident() {
     }
 
-    public Incident(Integer incidentid, String incidentname, double lat,
+    public Incident(Integer incidentid, String incidentname, String incidentnumber, double lat,
             double lon, Date created, Date lastupdate, boolean active, String folder) {
         this.incidentid = incidentid;
         this.incidentname = incidentname;
+        this.incidentnumber = incidentnumber;
         this.lat = lat;
         this.lon = lon;
         this.created = created;
@@ -118,12 +120,13 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
     }
 
     public Incident(Integer incidentid, Usersession usersession,
-            String incidentname, double lat, double lon, Date created, Date lastupdate,
+            String incidentname, String incidentnumber, double lat, double lon, Date created, Date lastupdate,
             boolean active, String folder, String bounds, Set<CollabRoom> collabrooms,
             Set<IncidentIncidentType> incidentIncidenttypes, Set<Form> forms) {
         this.incidentid = incidentid;
         this.usersession = usersession;
         this.incidentname = incidentname;
+        this.incidentnumber = incidentnumber;
         this.lat = lat;
         this.lon = lon;
         this.created = created;
@@ -172,6 +175,15 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
 
     public void setIncidentname(String incidentname) {
         this.incidentname = encodeForHTML(incidentname);
+    }
+
+    @Column(name = "incidentnumber", nullable = true, length = 50)
+    public String getIncidentnumber() {
+        return this.incidentnumber;
+    }
+
+    public void setIncidentnumber(String incidentnumber) {
+        this.incidentnumber = encodeForHTML(incidentnumber);
     }
 
     @Column(name = "lat", nullable = false, precision = 17, scale = 17)
@@ -352,6 +364,7 @@ public class Incident extends SADisplayMessageEntity implements SADisplayPersist
         try {
             json.put("usersessionid", this.usersessionid);
             json.put("incidentname", this.incidentname);
+            json.put("incidentnumber", this.incidentnumber);
             json.put("lat", this.lat);
             json.put("lon", this.lon);
             json.put("created", fmt.format(this.created));

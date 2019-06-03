@@ -47,7 +47,7 @@ public interface IncidentDAO extends BaseDAO {
     public int setIncidentCenter(String incidentname);
     public Incident getIncident(int incidentid);
     public Incident getIncidentByName(String incidentname, int workspaceId);
-    public int create(String incidentname, double lat, double lon, int usersessionid, int workspaceid, int parentid, String description);
+    public int create(String incidentname, String incidentnumber, double lat, double lon, int usersessionid, int workspaceid, int parentid, String description);
     public int createIncidentIncidentTypes(int incidentid, List<IncidentType> types);
     public int getNextIncidentId();
     public List<IncidentType> getIncidentTypes();
