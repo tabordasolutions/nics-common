@@ -51,7 +51,6 @@ import edu.mit.ll.nics.nicsdao.QueryManager;
 import edu.mit.ll.nics.nicsdao.mappers.IncidentRowMapper;
 import edu.mit.ll.nics.nicsdao.mappers.IncidentTypeRowMapper;
 import edu.mit.ll.nics.nicsdao.mappers.Incident_IncidentTypeRowMapper;
-import edu.mit.ll.nics.common.entity.Incident;
 import edu.mit.ll.nics.common.entity.datalayer.Folder;
 
 public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
@@ -66,7 +65,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
     	this.template = new NamedParameterJdbcTemplate(datasource);
     }
     
-    public int create(String incidentname, double lat, double lon, int usersessionid, int workspaceid, int parentid, String description){
+    public int create(String incidentname, String incidentnumber, double lat, double lon, int usersessionid, int workspaceid, int parentid, String description){
 		ArrayList<String> fields = new ArrayList<String>();
 		fields.add(SADisplayConstants.INCIDENT_ID);
 		fields.add(SADisplayConstants.LONGITUDE);
@@ -82,7 +81,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 		if(parentid > 0){
 			fields.add(SADisplayConstants.PARENT_INCIDENT_ID);
 		}
-		
+
+		fields.add(SADisplayConstants.INCIDENT_NUMBER);
 		
 		QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.INCIDENT_TABLE)
 				.insertInto(fields);
@@ -104,6 +104,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 		if(fields.contains(SADisplayConstants.PARENT_INCIDENT_ID)){
 			map.addValue(SADisplayConstants.PARENT_INCIDENT_ID, parentid);
 		}
+
+		map.addValue(SADisplayConstants.INCIDENT_NUMBER, incidentnumber);
 		
 		this.template.update(queryModel.toString(), map);
 		
@@ -119,6 +121,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 			MapSqlParameterSource map = new MapSqlParameterSource();
 			map.addValue(SADisplayConstants.USERSESSION_ID, incident.getUsersessionid());
 			map.addValue(SADisplayConstants.INCIDENT_NAME, incident.getIncidentname());
+			map.addValue(SADisplayConstants.INCIDENT_NUMBER, incident.getIncidentnumber());
 			map.addValue(SADisplayConstants.LATITUDE, incident.getLat());
 			map.addValue(SADisplayConstants.LONGITUDE, incident.getLon());
 			map.addValue(SADisplayConstants.DESCRIPTION, incident.getDescription());
@@ -629,7 +632,7 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 				.addValue(SADisplayConstants.COLLABROOM_AND_NAME, roomname)
 				.addValue(SADisplayConstants.CONTACT_TYPE_ID, SADisplayConstants.EMAIL_TYPE_ID));
 	}
-	
+
 	public int setIncidentCenter(String incidentname){
 		QueryModel query = QueryManager.createQuery(SADisplayConstants.INCIDENT_TABLE)
 		.update().equals("lat", "#{incident.lat}").comma().equals("lon", "#{incident.lon}")
