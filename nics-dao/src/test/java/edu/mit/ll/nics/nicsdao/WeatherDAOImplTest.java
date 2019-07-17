@@ -51,7 +51,7 @@ public class WeatherDAOImplTest {
     private NamedParameterJdbcTemplate mockJdbcTemplate = Mockito.mock(NamedParameterJdbcTemplate.class);
     private WeatherDAOImpl weatherDAO = new WeatherDAOImpl(mockJdbcTemplate);
     private Weather weather = new Weather("objectid", "location",
-        80.01, 9.22f, 310.0, 38.85f, "OK", 8.018);
+        80.01, 9.22f, 27.22, 310.0, 38.85f, "OK", 8.018);
 
     @Test
     public void returnsWeatherInfoSuccessfully() {

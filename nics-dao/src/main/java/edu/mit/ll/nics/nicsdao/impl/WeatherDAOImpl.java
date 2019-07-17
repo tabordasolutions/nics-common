@@ -76,7 +76,7 @@ public class WeatherDAOImpl implements WeatherDAO {
        String distanceFunctionSQL = String.format("st_distance(location::geography, %s)/1000", givenLocationGeography);
        double searchRangeInMeters = searchRangeInKiloMeters * 1000;
        String selectClause = "SELECT objectid as objectId, st_astext(location) as location, " +
-        "air_temperature as airTemperature, wind_speed as windSpeed, " +
+        "air_temperature as airTemperature, wind_speed as windSpeed, wind_gust as windGust, " +
                 "wind_direction as windDirection, relative_humidity as relativeHumidity, " +
                 "qc_status as qcStatus, " + distanceFunctionSQL + " as distance ";
        String whereClause = String.format(" WHERE qc_status in ('OK', 'WARNING') and st_dwithin(location::geography, %s, %.6f) ", givenLocationGeography, searchRangeInMeters);

@@ -36,6 +36,7 @@ public class Weather {
     private String location;
     private Double airTemperature;
     private Float windSpeed;
+    private Double windGust;
     private Double windDirection;
     private Float humidity;
     private String qcStatus;
@@ -46,12 +47,13 @@ public class Weather {
     private static final int TOTAL_DEGREES = 360;
 
     public Weather(String objectId, String location, Double airTemperature,
-            Float windSpeed, Double windDirection, Float humidity,
+            Float windSpeed, Double windGust, Double windDirection, Float humidity,
             String qcStatus, Double distance) {
         this.objectId = objectId;
         this.location = location;
         this.airTemperature = airTemperature;
         this.windSpeed = windSpeed;
+        this.windGust = windGust;
         this.windDirection = windDirection;
         this.humidity = humidity;
         this.qcStatus = qcStatus;
@@ -73,6 +75,8 @@ public class Weather {
     public Float getWindSpeed() {
         return windSpeed;
     }
+
+    public Double getWindGust() { return windGust; }
 
     public Double getWindDirection() {
         return windDirection;

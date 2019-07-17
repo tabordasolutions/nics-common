@@ -677,7 +677,17 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 		}
 		return null;
 	}
-	
+
+	public List<IncidentType> getIncidentTypesByIncidentId(int incidentId) {
+		String query = "SELECT it.incidenttypeid, incidenttypename FROM incidenttype it " +
+				"INNER JOIN incident_incidenttype iit on it.incidenttypeid = iit.incidenttypeid " +
+				"WHERE iit.incidentid = " + incidentId;
+
+		JoinRowCallbackHandler<IncidentType> handler = getIncidentTypeHandlerWith();
+		this.template.query(query.toString(), new MapSqlParameterSource(), handler);
+		return handler.getResults();
+	}
+
 	public int getNextIncidentId() {
     	QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.INCIDENT_SEQUENCE_TABLE).selectNextVal();
     	try{

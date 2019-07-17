@@ -44,7 +44,7 @@ public class WeatherRowMapper extends JoinRowMapper<Weather> {
     @Override
     public Weather createRowObject(ResultSet rs, int rowNum) throws SQLException {
         Weather weather = new Weather(rs.getString("objectid"), rs.getString("location"),
-        rs.getDouble("airTemperature"), rs.getFloat("windSpeed"),
+        rs.getDouble("airTemperature"), rs.getFloat("windSpeed"), rs.getDouble("windGust"),
         rs.getDouble("windDirection"), rs.getFloat("relativeHumidity"), rs.getString("qcStatus"), rs.getDouble("distance"));
         return weather;
     }
