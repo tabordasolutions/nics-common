@@ -57,8 +57,8 @@ public abstract class WebServiceRequest<T> {
 	}
 
 	public T getRequest(final String webServiceUrl, final Map headerOptions, final String requestMethod){
-		T result = null;
 		HttpURLConnection connection = null;
+		T result = null;
 		try{
 			log.debug("Attempting connection to " + webServiceUrl);
 			URL url = new URL(webServiceUrl);
