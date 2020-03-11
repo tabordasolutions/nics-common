@@ -162,8 +162,16 @@ public abstract class WebServiceRequest<T> {
 				log.debug("Did not receive a 200 response from upstream server for: " + webServiceUrl);
 				//result = this.parseRequest((InputStream) connection.getInputStream());
 				// TODO: try getErrorStream, getInputSTream causes exception
+				InputStream errorStream = null;
+				try {
+					errorStream = (InputStream) connection.getErrorStream();
+					result = this.parseRequest(errorStream);					
+				} finally {
+					IOUtils.closeQuietly(errorStream);
+				}
 				result = (T)("{\"code\":\"" + connection.getResponseCode() + "\", \"message\":\"" + connection.getResponseMessage() + 
-						"\", \"info\":\"" + this.parseRequest((InputStream) connection.getErrorStream()) + "\"}");
+						"\", \"info\":\"" + result + "\"}");
+				
 			}
 
 		}catch(Exception e){
