@@ -36,16 +36,17 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class WebServiceRequest<T> {
-	
+
 	private Logger log = LoggerFactory.getLogger(WebServiceRequest.class);
 
 	private String GET = "GET";
 	private String POST = "POST";
-	
+
 	/** Make a service request 
 	 * @param String webServiceUrl
 	 * @param Map headerOptions
@@ -54,17 +55,18 @@ public abstract class WebServiceRequest<T> {
 	public T getRequest(final String webServiceUrl, final Map headerOptions){
 		return this.getRequest(webServiceUrl, headerOptions, GET);
 	}
-	
+
 	public T getRequest(final String webServiceUrl, final Map headerOptions, final String requestMethod){
+		HttpURLConnection connection = null;
 		T result = null;
 		try{
 			log.debug("Attempting connection to " + webServiceUrl);
 			URL url = new URL(webServiceUrl);
-		    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		    connection.setConnectTimeout(30000);
-		    connection.setReadTimeout(30000);
-		    //load headerOption
-		    if(headerOptions != null){
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout(30000);
+			connection.setReadTimeout(30000);
+			//load headerOption
+			if(headerOptions != null){
 				for(Iterator itr=headerOptions.keySet().iterator(); itr.hasNext();){
 					String key = (String) itr.next();
 					String value = (String)headerOptions.get(key);
@@ -72,85 +74,117 @@ public abstract class WebServiceRequest<T> {
 				}
 			}
 
-		    connection.setRequestMethod(requestMethod);
+			connection.setRequestMethod(requestMethod);
 			connection.connect();
-		    log.debug("Connected to: " + webServiceUrl);
+			log.debug("Connected to: " + webServiceUrl);
 
-		    if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
-		    	result = this.parseRequest((InputStream) connection.getInputStream());
+			if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				InputStream is = null;
+				try {
+					is = (InputStream) connection.getInputStream();
+					result = this.parseRequest(is);					
+				} finally {
+					IOUtils.closeQuietly(is);
+				}
 			}
 			else {
 				log.debug("Did not receive a 200 response from upstream server for: " + webServiceUrl);
 			}
-		    
-		    connection.disconnect();
-		 }catch(Exception e){
+
+		} catch(Exception e){
 			log.error("Unable to connect to " + webServiceUrl, e);
+		} finally {
+			if (connection != null)
+				connection.disconnect();
+
 		}
-	    return result;
+		return result;
 	}
-	
+
 	public T postRequest(final String webServiceUrl, final Map headerOptions, final String jsonPayload){
 		T result = null;
+		HttpURLConnection connection = null;
 		try{
 			log.debug("Attempting connection to " + webServiceUrl);
 			System.out.println("Attempting connection to " + webServiceUrl);
 			URL url = new URL(webServiceUrl);
-		    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		    connection.setConnectTimeout(30000);
-		    connection.setReadTimeout(30000);
-		    //load headerOption
-		    if(headerOptions != null){
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout(30000);
+			connection.setReadTimeout(30000);
+			//load headerOption
+			if(headerOptions != null){
 				for(Iterator itr=headerOptions.keySet().iterator(); itr.hasNext();){
 					String key = (String) itr.next();
 					String value = (String)headerOptions.get(key);
 					connection.setRequestProperty(key, value);
 				}
 			}
-		    
-		    connection.setDoInput(true);
-            connection.setDoOutput(true);
-		    connection.setRequestMethod(POST);
-		    connection.setRequestProperty("Content-Type", "application/json");
-		    connection.setRequestProperty("Accept", "application/json");
-		    
-		    
-		    DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-            
-		    System.out.println("\n... about to write out jsonPayload bytes:\n" + jsonPayload + "\n-------");
-		    
-		    if(jsonPayload != null && !jsonPayload.isEmpty()) {
-		    	dataOutputStream.write(jsonPayload.getBytes());
-		    	System.out.println("Wrote " + jsonPayload.getBytes().length + " bytes!");
-		    } else {
-		    	dataOutputStream.write("".getBytes());
-		    	System.out.println("Wrote NO bytes!");
-		    }
-            
-            dataOutputStream.flush();
-            dataOutputStream.close();
-		    		    		    
-			connection.connect();
-		    log.debug("Connected to: " + webServiceUrl);
 
-		    if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
-		    	result = this.parseRequest((InputStream) connection.getInputStream());
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestMethod(POST);
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("Accept", "application/json");
+
+
+			DataOutputStream dataOutputStream = null;
+			try {
+				dataOutputStream = new DataOutputStream(connection.getOutputStream());
+
+				System.out.println("\n... about to write out jsonPayload bytes:\n" + jsonPayload + "\n-------");
+
+				if(jsonPayload != null && !jsonPayload.isEmpty()) {
+					dataOutputStream.write(jsonPayload.getBytes());
+					System.out.println("Wrote " + jsonPayload.getBytes().length + " bytes!");
+				} else {
+					dataOutputStream.write("".getBytes());
+					System.out.println("Wrote NO bytes!");
+				}
+
+				dataOutputStream.flush();
+
+			} finally {
+				IOUtils.closeQuietly(dataOutputStream);
+			}
+
+			connection.connect();
+			log.debug("Connected to: " + webServiceUrl);
+
+			if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				InputStream is = null;
+				try {
+					is = (InputStream) connection.getInputStream();
+					result = this.parseRequest(is);					
+				} finally {
+					IOUtils.closeQuietly(is);
+				}
 			} else {
 				log.debug("Did not receive a 200 response from upstream server for: " + webServiceUrl);
 				//result = this.parseRequest((InputStream) connection.getInputStream());
 				// TODO: try getErrorStream, getInputSTream causes exception
+				InputStream errorStream = null;
+				try {
+					errorStream = (InputStream) connection.getErrorStream();
+					result = this.parseRequest(errorStream);					
+				} finally {
+					IOUtils.closeQuietly(errorStream);
+				}
 				result = (T)("{\"code\":\"" + connection.getResponseCode() + "\", \"message\":\"" + connection.getResponseMessage() + 
-						"\", \"info\":\"" + this.parseRequest((InputStream) connection.getErrorStream()) + "\"}");
+						"\", \"info\":\"" + result + "\"}");
+				
 			}
-		    
-		    connection.disconnect();
-		 }catch(Exception e){
+
+		}catch(Exception e){
 			log.error("Unable to connect to " + webServiceUrl, e);
+		} finally {
+			if (connection != null)
+				connection.disconnect();
+
 		}
-	    return result;
+		return result;
 	}
-	
-	
+
+
 	/** Make a service request 
 	 * @param String webServiceUrl
 	 * @return Object - parsed based on child implementations
@@ -158,11 +192,11 @@ public abstract class WebServiceRequest<T> {
 	public T getRequest(final String webServiceUrl){
 		return this.getRequest(webServiceUrl, null, GET);
 	}
-	
+
 	public T postRequest(final String webServiceUrl, final String jsonData) {
 		return this.postRequest(webServiceUrl, null, jsonData);
 	}
-	
+
 	/** Parse the service response 
 	 * @param InputStream is
 	 * @return Object - parsed based on child implementations
