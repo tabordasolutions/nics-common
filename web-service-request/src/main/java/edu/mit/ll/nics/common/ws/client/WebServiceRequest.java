@@ -63,8 +63,8 @@ public abstract class WebServiceRequest<T> {
 			log.debug("Attempting connection to " + webServiceUrl);
 			URL url = new URL(webServiceUrl);
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setConnectTimeout(30000);
-			connection.setReadTimeout(30000);
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
 			//load headerOption
 			if(headerOptions != null){
 				for(Iterator itr=headerOptions.keySet().iterator(); itr.hasNext();){
@@ -109,8 +109,8 @@ public abstract class WebServiceRequest<T> {
 			System.out.println("Attempting connection to " + webServiceUrl);
 			URL url = new URL(webServiceUrl);
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setConnectTimeout(30000);
-			connection.setReadTimeout(30000);
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
 			//load headerOption
 			if(headerOptions != null){
 				for(Iterator itr=headerOptions.keySet().iterator(); itr.hasNext();){
