@@ -303,6 +303,8 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 		    			.addValue(SADisplayConstants.INCIDENT_ID, incidentId),
 		    			Integer.class);
 
+				log.debug("Org ID from Query-1: " + ret);
+
 				QueryModel queryModel1 = QueryManager.createQuery(SADisplayConstants.USER_ORG_TABLE)
 						.selectFromTable(SADisplayConstants.SYSTEM_ROLE_ID)
 						.join(SADisplayConstants.USER_ESCAPED).using(SADisplayConstants.USER_ID)
@@ -314,9 +316,12 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
 						.addValue(SADisplayConstants.ORG_ID, ret),
 						Integer.class);
 
+				log.debug("returnedSystemRoleId from Query-2: " + returnedSystemRoleId);
+
 				return (returnedSystemRoleId == SADisplayConstants.ADMIN_ROLE_ID);
 
 	    	}catch(Exception e){
+				log.error("Exception occurred in isAdmin() for incidentId: " + incidentId + " and username: " + username + " and workspace Id: " + workspaceId, e.getMessage());
 	    		return false;
 	    	}
     }
