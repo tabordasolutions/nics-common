@@ -291,22 +291,37 @@ public class IncidentDAOImpl extends GenericDAO implements IncidentDAO {
     public boolean isAdmin(int workspaceId, int incidentId, String username){
 	    	try{
 	    		QueryModel queryModel = QueryManager.createQuery(SADisplayConstants.USER_ORG_TABLE)
-		  			 	 .selectFromTable(SADisplayConstants.SYSTEM_ROLE_ID)
+		  			 	 .selectFromTable(SADisplayConstants.ORG_ID)
 						 .join(SADisplayConstants.USER_ESCAPED).using(SADisplayConstants.USER_ID)
 						 .join(SADisplayConstants.USER_SESSION_TABLE).using(SADisplayConstants.USER_ORG_ID)
 						 .join(SADisplayConstants.INCIDENT_TABLE).using(SADisplayConstants.USERSESSION_ID)
 						 .where().equals(SADisplayConstants.WORKSPACE_ID)
-						 .and().equals(SADisplayConstants.USER_NAME)
 						 .and().equals(SADisplayConstants.INCIDENT_ID);
 		    	
 		    	int ret = this.template.queryForObject(queryModel.toString(), 
 		    			new MapSqlParameterSource(SADisplayConstants.WORKSPACE_ID, workspaceId)
-		    			.addValue(SADisplayConstants.USER_NAME, username)
-		    			.addValue(SADisplayConstants.INCIDENT_ID, incidentId), 
+		    			.addValue(SADisplayConstants.INCIDENT_ID, incidentId),
 		    			Integer.class);
-		    	
-		    	return (ret == SADisplayConstants.ADMIN_ROLE_ID);
+
+				log.debug("Org ID from Query-1: " + ret);
+
+				QueryModel queryModel1 = QueryManager.createQuery(SADisplayConstants.USER_ORG_TABLE)
+						.selectFromTable(SADisplayConstants.SYSTEM_ROLE_ID)
+						.join(SADisplayConstants.USER_ESCAPED).using(SADisplayConstants.USER_ID)
+						.where().equals(SADisplayConstants.USER_NAME)
+						.and().equals(SADisplayConstants.ORG_ID);
+
+				int returnedSystemRoleId = this.template.queryForObject(queryModel1.toString(),
+						new MapSqlParameterSource(SADisplayConstants.USER_NAME, username)
+						.addValue(SADisplayConstants.ORG_ID, ret),
+						Integer.class);
+
+				log.debug("returnedSystemRoleId from Query-2: " + returnedSystemRoleId);
+
+				return (returnedSystemRoleId == SADisplayConstants.ADMIN_ROLE_ID);
+
 	    	}catch(Exception e){
+				log.error("Exception occurred in isAdmin() for incidentId: " + incidentId + " and username: " + username + " and workspace Id: " + workspaceId, e.getMessage());
 	    		return false;
 	    	}
     }
