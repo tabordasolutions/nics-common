@@ -38,8 +38,14 @@ import java.sql.SQLException;
 
 public class DatasourceRowMapper extends JoinRowMapper<Datasource> {
 
+	boolean accessSecurityInfo = false;
     public DatasourceRowMapper() {
         super("datasource");
+    }
+
+    public DatasourceRowMapper(boolean securityInfo) {
+        super("datasource");
+        accessSecurityInfo = securityInfo;
     }
 
     @Override
@@ -53,6 +59,10 @@ public class DatasourceRowMapper extends JoinRowMapper<Datasource> {
         if(rs.getString(SADisplayConstants.USER_NAME) != null &&
         		rs.getString(SADisplayConstants.PASSWORD) != null){
         	source.setSecure(true);
+        }
+        if (accessSecurityInfo) {
+            source.setUsername(rs.getString(SADisplayConstants.USER_NAME));
+            source.setPassword(rs.getString(SADisplayConstants.PASSWORD));
         }
         return source;
     }

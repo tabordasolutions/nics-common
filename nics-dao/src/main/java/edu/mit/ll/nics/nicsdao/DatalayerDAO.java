@@ -37,6 +37,7 @@ import edu.mit.ll.nics.common.entity.datalayer.Datalayerfolder;
 import edu.mit.ll.nics.common.entity.datalayer.Datasource;
 
 public interface DatalayerDAO extends BaseDAO {
+	public List<Datasource> getDatalayerDatasources(String datalayerid);
 	public List<Datalayerfolder> getDatalayerFolders(String folderid);
 	public List<Datasource> getDatasources(String type);
 	public Datalayer reloadDatalayer(String datalayerid);
