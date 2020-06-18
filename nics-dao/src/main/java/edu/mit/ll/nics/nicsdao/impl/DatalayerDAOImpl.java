@@ -71,6 +71,31 @@ public class DatalayerDAOImpl extends GenericDAO implements DatalayerDAO {
         this.template = new NamedParameterJdbcTemplate(datasource);
     }
     
+	/** getDatalayerSource
+	 *  @param datalayerid - String - id of layer 
+	 *  @return JSONArray - array of objects representing a datalayer.
+	 */
+	public List<Datasource> getDatalayerDatasources(String datalayerid){
+		QueryModel query = QueryManager.createQuery(SADisplayConstants.DATALAYER_TABLE)
+				.selectAllFromTable()
+				.join(SADisplayConstants.DATALAYER_SOURCE_TABLE).using(SADisplayConstants.DATALAYER_SOURCE_ID)
+				.join(SADisplayConstants.DATASOURCE_TABLE).using(SADisplayConstants.DATASOURCE_ID)
+				.join(SADisplayConstants.DATASOURCE_TYPE_TABLE).using(SADisplayConstants.DATASOURCE_TYPE_ID)
+				.where().equals(SADisplayConstants.DATALAYER_ID);
+
+		JoinRowCallbackHandler<Datalayer> handler = getHandlerWith(
+				new DatalayersourceRowMapper().attachAdditionalMapper(
+						new DatasourceRowMapper(true).attachAdditionalMapper(
+								new DatasourcetypeRowMapper())));
+
+		this.template.query(query.toString(), new MapSqlParameterSource(SADisplayConstants.DATALAYER_ID, datalayerid), handler);
+
+		List<Datasource> datasources = new ArrayList<Datasource>();
+		if (handler.getResults().size() > 0)
+			datasources.add(handler.getResults().get(0).getDatalayersource().getDatasource());
+		return datasources;
+	}
+
      /** getDatalayerFolders
 	 *  @param folderid - String - id of folder holding datalayers
 	 *  @return JSONArray - array of objects representing a datalayer.
