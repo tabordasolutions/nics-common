@@ -68,6 +68,7 @@ public class Datalayer extends SADisplayMessageEntity implements SADisplayPersis
     private String displayname;    
     private Date created;
     private String legend;
+    private String rootFolder;
     private Set<DatalayerCollabroom> datalayerCollabrooms = new HashSet<DatalayerCollabroom>(0);
     private Set<Datalayerfolder> datalayerfolders = new HashSet<Datalayerfolder>(0);
     
@@ -77,7 +78,7 @@ public class Datalayer extends SADisplayMessageEntity implements SADisplayPersis
 
     public Datalayer(String datalayerid, Usersession usersession,
             Datalayersource datalayersource, Folder folder, boolean baselayer,
-            String displayname, Date created, String legend) {
+            String displayname, Date created, String legend, String rootFolder) {
         this.datalayerid = datalayerid;
         this.usersession = usersession;
         this.datalayersource = datalayersource;
@@ -85,12 +86,13 @@ public class Datalayer extends SADisplayMessageEntity implements SADisplayPersis
         this.displayname = displayname;
         this.created = created;
         this.legend = legend;
+        this.rootFolder = rootFolder;
     }
 
     public Datalayer(String datalayerid, Usersession usersession,
             Datalayersource datalayersource, Folder folder, boolean baselayer,
             String displayname, Date created,
-            Set<DatalayerCollabroom> datalayerCollabrooms, String legend) {
+            Set<DatalayerCollabroom> datalayerCollabrooms, String legend, String rootFolder) {
         this.datalayerid = datalayerid;
         this.usersession = usersession;
         this.datalayersource = datalayersource;
@@ -99,6 +101,7 @@ public class Datalayer extends SADisplayMessageEntity implements SADisplayPersis
         this.created = created;
         this.datalayerCollabrooms = datalayerCollabrooms;
         this.legend = legend;
+        this.rootFolder = rootFolder;
     }
 
     @Id
@@ -206,7 +209,15 @@ public class Datalayer extends SADisplayMessageEntity implements SADisplayPersis
         this.legend = legend;
     }
 
-    @Override
+    public String getRootFolder() {
+		return rootFolder;
+	}
+
+	public void setRootFolder(String rootFolder) {
+		this.rootFolder = rootFolder;
+	}
+
+	@Override
     public JSONObject toJSONObject() {
         JSONObject json = new JSONObject();
         try {
